@@ -1,6 +1,6 @@
 ### eBay.js
 An eBay-like system for intro to databases.
-
+ 
 ### System Requirements
 1. Any Linux distro (Ubuntu 14.04 prefered).
 2. Node.js v5.7.0 or greater
