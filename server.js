@@ -67,9 +67,9 @@ server.register(require('vision'), function (err) {
 	    html: require('handlebars')
 	},
 	relativeTo: __dirname,
-	path: './templates',
-	layoutPath: './templates/layout',
-	helpersPath: './templates/helpers'
+	path: './views',
+	layoutPath: './views/layout',
+	helpersPath: './views/helpers'
     });
    
 });
