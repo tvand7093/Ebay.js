@@ -37,14 +37,23 @@ server.route({
 	}	
     }
 });
-	   
-process.on('SIGTERM', function(){
-    server.log('info', 'Server is shuting down in 5 seconds...');
+
+function killServer() {
+   server.log('info', 'Server is shuting down now...');
     if(ctx) ctx.end();
     ctx = null;
-    server.stop({ timeout: 5 * 1000}, function(){
+    
+    server.stop({}, function(){
 	process.exit(0);
     });
+}
+
+process.on('SIGTERM', function(){
+    killServer();
+});
+
+process.on('SIGINT', function(){
+    killServer();
 });
 
 server.register({
