@@ -1,0 +1,23 @@
+{
+  "name": "ebay.js",
+  "version": "1.0.0",
+  "description": "A Node.js implementation of an eBay style website for CS351 (intro to databases).",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@gitlab.theitalianirishman.com/Databases/ebay.js"
+  },
+  "keywords": [
+    "databases",
+    "sql"
+  ],
+  "author": "Tyler Vanderhoef, Matt Burris",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "^13.2.2",
+    "promise": "^7.1.1"
+  }
+}
