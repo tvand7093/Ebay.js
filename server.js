@@ -29,6 +29,7 @@ server.route({
 	if(ctx){
 	    ctx.query('SELECT * FROM Users')
 		.then(function(rows){
+		    debugger;
 		    reply.view('index', {data : rows});
 		});
 	}

@@ -13,6 +13,11 @@ An eBay-like system for intro to databases.
 4. Make sure you have mysql installed and configured on your machine. See this [how-to](https://www.linode.com/docs/databases/mysql/install-mysql-on-ubuntu-14-04) for installing and configuring mysql on Ubuntu.
 5. Run the the server by calling `node .`.
 
+### Debugging
+Node ships with its own debugger. The debugger it uses is similar to that of GDB. In order to use it, simply run `node debug .` rather than the `node .`. This will allow you to
+break, continue, pause, stop, etc anywhere in the code. Specifically, use the `debugger` keyword anywhere you want to create a breakpoint. For a more detailed listing
+of commands and examples, see the [Node Debugging Documentation](https://nodejs.org/api/debugger.html#debugger_info).
+
 ### Running the tests
 First off, make sure you have Jasmine installed before you continue on by running the following command: `npm install -g jasmine`.
 Then, to run the currently built tests, just run the following command: `npm test`.
