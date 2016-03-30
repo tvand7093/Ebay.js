@@ -1,0 +1,4 @@
+all_tests:
+  script:
+	- npm install
+        - jasmine
