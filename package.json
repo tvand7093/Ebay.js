@@ -4,7 +4,7 @@
   "description": "A Node.js implementation of an eBay style website for CS351 (intro to databases).",
   "main": "server.js",
   "scripts": {
-      "test": "jasmine"
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
@@ -17,8 +17,12 @@
   "author": "Tyler Vanderhoef, Matt Burris",
   "license": "ISC",
   "dependencies": {
+    "good": "^6.6.0",
+    "good-console": "^5.3.1",
     "hapi": "^13.2.2",
     "jasmine": "^2.4.1",
-    "promise": "^7.1.1"
+    "mysql": "^2.10.2",
+    "promise": "^7.1.1",
+    "promise-mysql": "^1.3.2"
   }
 }
