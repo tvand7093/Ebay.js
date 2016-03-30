@@ -29,11 +29,11 @@ server.route({
 	if(ctx){
 	    ctx.query('SELECT * FROM Users')
 		.then(function(rows){
-		    reply(rows);
+		    reply.view('index', {data : rows});
 		});
 	}
 	else {
-	    reply('No database connection!');
+	    reply.view("NoData");
 	}	
     }
 });
@@ -54,6 +54,23 @@ process.on('SIGTERM', function(){
 
 process.on('SIGINT', function(){
     killServer();
+});
+
+server.register(require('vision'), function (err) {
+    if (err) {
+	throw err;
+    }
+
+    server.views({
+	engines: {
+	    html: require('handlebars')
+	},
+	relativeTo: __dirname,
+	path: './templates',
+	layoutPath: './templates/layout',
+	helpersPath: './templates/helpers'
+    });
+   
 });
 
 server.register({

@@ -1,0 +1,28 @@
+<h1>All Users</h1>
+<table>
+  <thead>
+    <tr>
+      <td>First Name</td>
+      <td>Last Name</td>
+      <td>Is a Developer</td>
+    </tr>
+  </thead>
+  <tbody>
+    {{#data}}
+    <tr>
+      <td>{{FirstName}}</td>
+      <td>{{LastName}}</td>
+      <td>
+	{{#if IsDeveloper}}
+	Yes
+	{{else}}
+	No
+	{{/if}}
+      </td>
+    </tr>
+
+    {{/data}}
+  </tbody>
+  
+
+</table>
