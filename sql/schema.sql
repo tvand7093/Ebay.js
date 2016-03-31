@@ -12,20 +12,14 @@ CREATE TABLE Users
 CREATE TABLE AuctionResults
 (
 	Id INT AUTO_INCREMENT PRIMARY KEY,
-	WinnerEmail NVARCHAR(30),
+	WinnerEmail NVARCHAR(30) NULL,
 	INDEX auction_result_winner_index (WinnerEmail),
         FOREIGN KEY (WinnerEmail)
 	REFERENCES Users(Email)
-	ON DELETE CASCADE
+	ON DELETE CASCADE,
 
 	WasSold TINYINT(1),
-	IsClosed TINYINT(1),
-
-	ItemId INT NOT NULL,
-	INDEX auction_result_item_index (ItemId),
-        FOREIGN KEY (ItemId)
-	REFERENCES Items(Id)
-	ON DELETE CASCADE
+	IsClosed TINYINT(1)
 );
 
 
@@ -42,13 +36,12 @@ CREATE TABLE Items
 	INDEX item_user_index (SellerEmail),
         FOREIGN KEY (SellerEmail)
 	REFERENCES Users(Email)
-	ON DELETE CASCADE
+	ON DELETE CASCADE,
 
 	INDEX item_auction_result_index (AuctionResultId),
         FOREIGN KEY (AuctionResultId)
 	REFERENCES AuctionResults(Id)
 	ON DELETE CASCADE
-
 );
 
 
