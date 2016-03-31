@@ -6,17 +6,9 @@
 USE Development;
 
 DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Items;
+DROP TABLE IF EXISTS AuctionResults;
+DROP TABLE IF EXISTS Bids;
 
 SOURCE schema.sql
 
-INSERT INTO Users
-VALUES ('Tyler', 'Vanderhoef', 1);
-
-INSERT INTO Users
-VALUES ('Matt', 'Burris', 1);
-
-INSERT INTO Users
-VALUES ('Chris', 'Willette', 0);
-
-
-SELECT * FROM Users;
