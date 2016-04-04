@@ -33,6 +33,8 @@ CREATE TABLE Items
 	AuctionResultId INT NOT NULL,
 	StartPrice NUMERIC(15, 2) NOT NULL,
 
+	EndDate DATETIME NOT NULL,
+
 	INDEX item_user_index (SellerEmail),
         FOREIGN KEY (SellerEmail)
 	REFERENCES Users(Email)
@@ -51,9 +53,15 @@ CREATE TABLE Bids
 	Amount NUMERIC(15,2) NOT NULL,
 	UserEmail NVARCHAR(30) NOT NULL,
 	TimeStamp DATETIME NOT NULL,
-
+	ItemId INT NOT NULL,
+	
 	INDEX bid_user_index (UserEmail),
         FOREIGN KEY (UserEmail)
 	REFERENCES Users(Email)
+	ON DELETE CASCADE,
+
+	INDEX bid_item_index (ItemId),
+        FOREIGN KEY (ItemId)
+	REFERENCES Items(Id)
 	ON DELETE CASCADE
 );

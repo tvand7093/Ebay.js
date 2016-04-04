@@ -1,49 +1,44 @@
 'use strict';
 
-const Settings = require ('./config/config.js');
-const Db = require('promise-mysql');
 const Hapi = require ('hapi');
+const Path = require('path');
 const server = new Hapi.Server();
 const Good = require('good');
+const Inert = require('inert');
 
-var ctx;
 
-// First you need to create a connection to the db
-const conn = Db.createConnection({
-    host: Settings.db.server,
-    user: Settings.db.user,
-    password: Settings.db.password,
-    database: Settings.db.database
-}).then(function(connection) {
-    ctx = connection;
-}).catch(function(err){
-    console.log(err);
-});
 
-server.connection({ port: 3000 });
+const usersController = require('./controllers/users.js');
+const bidsController = require('./controllers/bids.js');
 
-server.route({
-    method: 'GET',
-    path: '/',
-    handler: function (request, reply) {
-	if(ctx){
-	    ctx.query('SELECT * FROM Users')
-		.then(function(rows){
-		    debugger;
-		    reply.view('index', {data : rows});
-		});
+server.connection({port : 3000});
+
+server.register(Inert, () => {});
+
+server.route([
+    {
+	method: 'GET',
+	path: '/users',
+	handler: usersController.index
+    },
+    {
+	method: 'GET',
+	path: '/bids',
+	handler: bidsController.index
+    },
+    {
+	method: 'GET',
+	path: '/public/{param*}',
+	handler: {
+	    directory: {
+		path: Path.normalize(__dirname + '/public')
+	    }
 	}
-	else {
-	    reply.view("NoData");
-	}	
     }
-});
+]);
 
 function killServer() {
-   server.log('info', 'Server is shuting down now...');
-    if(ctx) ctx.end();
-    ctx = null;
-    
+    server.log('info', 'Server is shuting down now...');    
     server.stop({}, function(){
 	process.exit(0);
     });
@@ -69,7 +64,8 @@ server.register(require('vision'), function (err) {
 	relativeTo: __dirname,
 	path: './views',
 	layoutPath: './views/layout',
-	helpersPath: './views/helpers'
+	helpersPath: './views/helpers',
+	layout: true
     });
    
 });
@@ -92,7 +88,7 @@ server.register({
     }
 
     server.start(function(err) {
-
+	const Io = require('socket.io')(server.listener);
 	if (err) {
 	    throw err;
 	}
