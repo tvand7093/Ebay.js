@@ -64,7 +64,7 @@ module.exports.search = function (request, reply){
     var statement = allItems();
     
     if(name){
-	statement = statement.where('i.Name LIKE ?', name);
+	statement = statement.where('i.Name LIKE ?', `%${name}%`);
     }
 
     if(category){
@@ -72,6 +72,7 @@ module.exports.search = function (request, reply){
     }
 
     statement = statement.toString();
+
     db.open().then(function(ctx){
 	ctx.query(statement)
 	    .then(function(rows){
