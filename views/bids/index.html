@@ -1,25 +1,31 @@
 
-<table>
-  <thead>
-    <tr>
-      <td>Item Name</td>
-      <td>Category</td>
-      <td>Current Bid</td>
-      <td>Last Bid Time</td>
-      <td>Time Remaining</td>
-      <td></td>
-    </tr>
-  </thead>
-  <tbody>
-    {{#data}}
-    <tr data-id="{{Id}}">
-      <td>{{Name}}</td>
-      <td>{{Category}}</td>
-      <td>{{Amount}}</td>
-      <td>{{TimeStamp}}</td>
-      <td>{{TimeRemaining.days}} {{TimeRemaining.hours}} {{TimeRemaining.minutes}} {{TimeRemaining.seconds}}</td>
-      <td><a href='/bids/edit/{{Id}}'>View Item</a></td>
-    </tr>
-    {{/data}}
-  </tbody>
-</table>
+
+<div class='row'>
+  <div class='col-md-12'>
+    <table class='table table-bordered'>
+      <thead>
+	<tr>
+	  <td>Item Name</td>
+	  <td>Category</td>
+	  <td>Current Bid</td>
+	  <td>Last Bid Time</td>
+	  <td>Time Remaining</td>
+	  <td></td>
+	</tr>
+      </thead>
+      <tbody>
+	{{#data}}
+	<tr data-id="{{Id}}">
+	  <td>{{Name}}</td>
+	  <td>{{Category}}</td>
+	  <td>{{Amount}}</td>
+	  <td>{{TimeStamp}}</td>
+	  <td>{{TimeRemaining.days}} {{TimeRemaining.hours}} {{TimeRemaining.minutes}} {{TimeRemaining.seconds}}</td>
+	  <td><a href='/bids/edit/{{Id}}'>View Item</a></td>
+	</tr>
+	{{/data}}
+      </tbody>
+    </table>
+
+  </div>
+</div>

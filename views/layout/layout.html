@@ -1,11 +1,28 @@
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="/public/sockets.js"></script>
     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" >
   </head>
   <body>
-    {{{content}}}
+    <div class='container-fluid'>
+      <div class='row'>
+	<div class='col-md-2'>
+	  <div class="list-group">
+	    <a href="/" class="list-group-item active">
+	      All Items
+	    </a>
+	    <a href="/bids" class="list-group-item">My Bids</a>
+	    <a href="/items" class="list-group-item">My Items</a>
+	    <a href="/users" class="list-group-item">View Users</a>
+	  </div>
+	</div>
+	<div class='col-md-10'>
+	  {{{content}}}
+	</div>
+      </div>
+    </div>
   </body>
 </html>

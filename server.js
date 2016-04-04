@@ -5,11 +5,12 @@ const Path = require('path');
 const server = new Hapi.Server();
 const Good = require('good');
 const Inert = require('inert');
-
+const Joi = require('joi');
 
 
 const usersController = require('./controllers/users.js');
 const bidsController = require('./controllers/bids.js');
+const itemsController = require('./controllers/items.js');
 
 server.connection({port : 3000});
 
@@ -25,6 +26,24 @@ server.route([
 	method: 'GET',
 	path: '/bids',
 	handler: bidsController.index
+    },
+    {
+	method: 'GET',
+	path: '/',
+	handler: itemsController.index
+    },
+    {
+	method: 'GET',
+	path: '/items/search',
+	handler: itemsController.search,
+	config: {
+	    validate: {
+		query: {
+		    name: Joi.string().allow(''),
+		    category: Joi.string().allow('')
+		}
+	    }
+	}
     },
     {
 	method: 'GET',
@@ -88,7 +107,8 @@ server.register({
     }
 
     server.start(function(err) {
-	const Io = require('socket.io')(server.listener);
+	const io = require('socket.io')(server.listener);
+	
 	if (err) {
 	    throw err;
 	}
