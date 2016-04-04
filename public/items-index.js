@@ -56,9 +56,10 @@ $(function() {
     };
 
     const clearTimers = function() {
-	timers.each(function(index, timer){
-	    clearInterval(timer);
-	});
+	for(var i = 0; i < timers.length; i++){
+	    clearInterval(timers[i]);
+	    timers.pop();
+	}
     };
     
     const refreshGrid = function() {
@@ -75,10 +76,10 @@ $(function() {
 				  <td>${item.Amount || ''}</td>\
 				  <td>${item.TimeStamp || ''}</td>\
 				  <td>\
-				  <span class='days' ${item.TimeRemaining.days} days,</span> \
-				  <span class='hours' ${item.TimeRemaining.hours} hrs,</span> \
-				  <span class='minutes' ${item.TimeRemaining.minutes} min,</span> \
-				  <span class='seconds' ${item.TimeRemaining.seconds} sec,</span> \
+				  <span class='days'>${item.TimeRemaining.days} days,</span> \
+				  <span class='hours'>${item.TimeRemaining.hours} hrs,</span> \
+				  <span class='minutes'>${item.TimeRemaining.minutes} min,</span> \
+				  <span class='seconds'>${item.TimeRemaining.seconds} sec</span> \
 				  </td>\
 				  </tr>`);
 	    });
