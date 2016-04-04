@@ -1,24 +1,31 @@
 
-
 <div class='row'>
   <div class='col-md-12'>
-    <div class='panel'>
-      <div class='col-md-12'>
-	<div class='col-md-2'>
-	  <label class='label'>Search</label> 
-	</div>
-	<div class='col-md-4'>
-	  <input id='name' name='Name' placeholder='search'/>
-	</div>
-	<div class='col-md-4'>
-	  <select id='category'>
-	    {{#categories}}
-	    <option value='{{Category}}'>{{Category}}</option>
-	    {{/categories}}
-	  </select>
-	</div>
-	<div class='col-md-2'>
-	  <button id='search' class='btn btn-default'>Search</button>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	<h3 class="panel-title">Search Items</h3>
+      </div>
+      <div class="panel-body">
+	<div class='row'>
+	  <div class='col-md-12'>
+	    <div class='col-md-3'>
+	      Name
+	      <input id='name' class='form-control' name='Name' placeholder='search'/>
+	    </div>
+	    <div class='col-md-3'>
+	      Category
+	      <select id='category' class='form-control'>
+		<option selected value>All</option>
+		{{#categories}}
+		<option value='{{Category}}'>{{Category}}</option>
+		{{/categories}}
+	      </select>
+	    </div>
+	    <div class='col-md-2'>
+	      &nbsp;
+	      <button id='search' class='btn btn-default btn-success form-control'>Search</button>
+	    </div>
+	  </div>
 	</div>
       </div>
     </div>
@@ -26,32 +33,42 @@
 </div>
 <div class='row'>
   <div class='col-md-12'>
-    <h4 class='title'>Results</h4>
-    <table class='table table-bordered'>
-      <thead>
-	<tr>
-	  <td>Item Name</td>
-	  <td>Category</td>
-	  <td>Current Bid</td>
-	  <td>Last Bid Time</td>
-	  <td>Time Remaining</td>
-	  <td></td>
-	</tr>
-      </thead>
-      <tbody>
-	{{#results}}
-	<tr data-id="{{Id}}">
-	  <td>{{Name}}</td>
-	  <td>{{Category}}</td>
-	  <td>{{Amount}}</td>
-	  <td>{{TimeStamp}}</td>
-	  <td>{{TimeRemaining}}</td>
-	  <td><a href='/bids/edit/{{Id}}'>View Item</a></td>
-	</tr>
-	{{/results}}
-      </tbody>
-    </table>
-
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	<h3 class="panel-title">Search Results</h3>
+      </div>
+      <div class="panel-body">
+	<table class='table table-bordered'>
+	  <thead>
+	    <tr>
+	      <td>Item Name</td>
+	      <td>Category</td>
+	      <td>Current Bid</td>
+	      <td>Last Bid Time</td>
+	      <td>Time Remaining</td>
+	      <td></td>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    {{#results}}
+	    <tr data-id="{{Id}}">
+	      <td>{{Name}}</td>
+	      <td>{{Category}}</td>
+	      <td>{{Amount}}</td>
+	      <td>{{TimeStamp}}</td>
+	      <td>
+		<span class='days'>{{TimeRemaining.days}} days,</span>
+		<span class='hours'>{{TimeRemaining.hours}} hrs,</span>
+		<span class='minutes'>{{TimeRemaining.minutes}} min,</span>
+		<span class='seconds'>{{TimeRemaining.seconds}} sec</span>
+	      </td>
+	      <td><a href='/bids/edit/{{Id}}'>View Item</a></td>
+	    </tr>
+	    {{/results}}
+	  </tbody>
+	</table>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -61,19 +78,21 @@
 	  var name = $('#name').val();
 	  var category = $('#category').val();
 
-	  if(!name && !category) return;
-
 	  $.get("/items/search?name=" + name + "&category=" + category, function(results){
 	      $("tbody").children('tr').remove();
 
 	      results.forEach(function(item) {
-		  $('tbody').append(`<tr> \
+		  $('tbody').append(`<tr data-id='${item.Id}'> \
 				    <td>${item.Name}</td> \
 				    <td>${item.Category}</td>\
-				    <td>${item.Amount}</td>\
-				    <td>${item.TimeStamp}</td>\
-				    <td>${item.TimeRemaining}</td>\
-				    <td></td>
+				    <td>${item.Amount || ''}</td>\
+				    <td>${item.TimeStamp || ''}</td>\
+				    <td>\
+				    <span class='days' ${item.TimeRemaining.days} days,</span> \
+				    <span class='hours' ${item.TimeRemaining.hours} hrs,</span> \
+				    <span class='minutes' ${item.TimeRemaining.minutes} min,</span> \
+				    <span class='seconds' ${item.TimeRemaining.seconds} sec,</span> \
+				    </td>\
 				    </tr>`);
 	      });
 	  });

@@ -1,46 +1,52 @@
 'use strict';
+require('moment-countdown');
+const sql = require('squel');
+const db = require('../sql/manager.js');
+const moment = require('moment');
 
-var db = require('../sql/manager.js');
-var moment = require('moment');
+function allItems() {
+    return sql
+      .select()
+      .from('Bids', 'b')
+      .field("i.Id")
+      .field("i.Name")
+      .field("i.Category")
+      .field("i.EndDate")
+      .field("b.Amount")
+      .field("b.TimeStamp")
+      .right_join('Items', 'i', 'b.ItemId = i.Id')    
+      .join('AuctionResults', 'ar', 'ar.Id = i.AuctionResultId');
+}
 
 function appendRemaining(items){
     let getDiff = function(endDate) {
 	var end = moment(endDate);
 	var today = moment(new Date());
-
-	return {
-	    days: end.diff(today, 'days'),
-	    hours: end.diff(today, 'hours'),
-	    min: end.diff(today, 'minutes'),
-	    seconds: end.diff(today, 'seconds')
-	};
+	debugger;
+	return moment(end.diff(today)).countdown();
     };
 
     for(var i = 0; i < items.length; i++){
 	let diff = getDiff(items[i].EndDate);
-	items[i].TimeRemaining = `${diff.days}:${diff.hours}:${diff.min}:${diff.seconds/60}`;
+	items[i].TimeRemaining = diff;
     }
 }
 
 module.exports.index = function (request, reply){
-    const itemQuery = "SELECT i.Id, i.Name, i.Category, i.EndDate FROM Items i";
-    const itemQuery2 = "SELECT i.Id, i.Name, i.Category, b.Amount, b.TimeStamp, i.EndDate \
-FROM Items i \
-JOIN AuctionResults ar ON i.AuctionResultId = ar.Id \
-JOIN Bids b ON b.ItemId = i.Id";
+    const itemQuery = allItems().toString();
 
-    const categoryQuery = "SELECT DISTINCT Category FROM Items";
-    
+    const categoryQuery = sql.select().from('Items').field('Category').distinct().toString();
+
     db.open().then(function(ctx){
 	ctx.query(categoryQuery)
 	    .then(function(categories){
-		ctx.query(itemQuery2)
+		ctx.query(itemQuery)
 		    .then(function(rows){
 			ctx.end();
 			if(rows.length > 0){
 			    appendRemaining(rows);
 			}
-			debugger;
+
 			reply.view('items/index', {categories : categories, results : rows});
 		    });	    
 	    });
@@ -54,12 +60,18 @@ module.exports.search = function (request, reply){
 
     let name = query.name || '';
     let category = query.category || '';
-    
-    const statement =`SELECT i.Id, i.Name, i.Category, b.Amount, b.TimeStamp, i.EndDate \
-    FROM Bids b \
-    JOIN Items i ON i.Id = b.ItemId \
-    WHERE i.Name LIKE \'%${name}%\' AND i.Category = \'${category}\'` ;
 
+    var statement = allItems();
+    
+    if(name){
+	statement = statement.where('i.Name LIKE ?', name);
+    }
+
+    if(category){
+	statement = statement.where('i.Category = ?', category);
+    }
+
+    statement = statement.toString();
     db.open().then(function(ctx){
 	ctx.query(statement)
 	    .then(function(rows){
