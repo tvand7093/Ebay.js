@@ -1,4 +1,4 @@
-
+<script src='/public/items-index.js' ></script>
 <div class='row'>
   <div class='col-md-12'>
     <div class="panel panel-default">
@@ -71,31 +71,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  $(function() {
-      $("#search").click(function() {
-	  var name = $('#name').val();
-	  var category = $('#category').val();
-
-	  $.get("/items/search?name=" + name + "&category=" + category, function(results){
-	      $("tbody").children('tr').remove();
-
-	      results.forEach(function(item) {
-		  $('tbody').append(`<tr data-id='${item.Id}'> \
-				    <td>${item.Name}</td> \
-				    <td>${item.Category}</td>\
-				    <td>${item.Amount || ''}</td>\
-				    <td>${item.TimeStamp || ''}</td>\
-				    <td>\
-				    <span class='days' ${item.TimeRemaining.days} days,</span> \
-				    <span class='hours' ${item.TimeRemaining.hours} hrs,</span> \
-				    <span class='minutes' ${item.TimeRemaining.minutes} min,</span> \
-				    <span class='seconds' ${item.TimeRemaining.seconds} sec,</span> \
-				    </td>\
-				    </tr>`);
-	      });
-	  });
-      });
-  });
-</script>
