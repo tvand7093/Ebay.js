@@ -5,8 +5,10 @@ socket.on('bid over', function(payload){
     //so payload will contain info about said bid result.
 });
 
-socket.on('bid updated', function(bidInfo){
-    //happens when a bid gets updated, i.e. price updated by a user placing a bid.
+socket.on('higher bid placed', function(bidInfo){
+    //happens when another user places a bid. this will update the badge icon to show what bids are stale.
     console.log("Bid updated");
     console.log(bidInfo);
 });
+
+socket.on('

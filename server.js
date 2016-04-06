@@ -5,46 +5,22 @@ const Path = require('path');
 const server = new Hapi.Server();
 const Good = require('good');
 const Inert = require('inert');
-const Joi = require('joi');
-
-
-const usersController = require('./controllers/users.js');
-const bidsController = require('./controllers/bids.js');
-const itemsController = require('./controllers/items.js');
 
 server.connection({port : 3000});
 
 server.register(Inert, () => {});
 
+//route users
+const users = require('./controllers/users.js').route(server);
+
+//route bids
+const bids = require('./controllers/bids.js').route(server);
+
+//route items
+const items = require('./controllers/items.js').route(server);
+
+//global routing
 server.route([
-    {
-	method: 'GET',
-	path: '/users',
-	handler: usersController.index
-    },
-    {
-	method: 'GET',
-	path: '/bids',
-	handler: bidsController.index
-    },
-    {
-	method: 'GET',
-	path: '/',
-	handler: itemsController.index
-    },
-    {
-	method: 'GET',
-	path: '/items/search',
-	handler: itemsController.search,
-	config: {
-	    validate: {
-		query: {
-		    name: Joi.string().allow(''),
-		    category: Joi.string().allow('')
-		}
-	    }
-	}
-    },
     {
 	method: 'GET',
 	path: '/public/{param*}',
@@ -108,6 +84,11 @@ server.register({
 
     server.start(function(err) {
 	const io = require('socket.io')(server.listener);
+
+	io.on('connection', function(socket){
+	    users.io(socket);
+	    items.io(socket);
+	    bids.io(socket);	});
 	
 	if (err) {
 	    throw err;
