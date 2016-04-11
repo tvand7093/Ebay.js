@@ -191,7 +191,19 @@ module.exports.route = function(server) {
       {
         method: 'GET',
         path: '/items/grid',
-        handler: grid
+        handler: grid,
+        config: {
+          validate: {
+            query: {
+              _search: Joi.boolean(),
+              nd: Joi.number(),
+              sidx: Joi.string(),
+              sord: Joi.string(),
+              page: Joi.number(),
+              rows: Joi.number()
+            }
+          }
+        }
       },
       {
         method: 'POST',
