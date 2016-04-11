@@ -38,35 +38,10 @@
 	<h3 class="panel-title">Search Results</h3>
       </div>
       <div class="panel-body">
-	<table class='table table-bordered'>
-	  <thead>
-	    <tr>
-	      <td>Item Name</td>
-	      <td>Category</td>
-	      <td>Current Bid</td>
-	      <td>Last Bid Time</td>
-	      <td>Time Remaining</td>
-	      <td></td>
-	    </tr>
-	  </thead>
-	  <tbody>
-	    {{#results}}
-	    <tr data-id="{{Id}}">
-	      <td>{{Name}}</td>
-	      <td>{{Category}}</td>
-	      <td>{{Amount}}</td>
-	      <td>{{TimeStamp}}</td>
-	      <td>
-		<span class='days'>{{TimeRemaining.days}} days,</span>
-		<span class='hours'>{{TimeRemaining.hours}} hrs,</span>
-		<span class='minutes'>{{TimeRemaining.minutes}} min,</span>
-		<span class='seconds'>{{TimeRemaining.seconds}} sec</span>
-	      </td>
-	      <td><a href='/bids/edit/{{Id}}'>View Item</a></td>
-	    </tr>
-	    {{/results}}
-	  </tbody>
-	</table>
+	<div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager" style='height: 50px'></div>
+	</div>
       </div>
     </div>
   </div>

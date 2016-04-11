@@ -33,7 +33,7 @@ server.route([
 ]);
 
 function killServer() {
-    server.log('info', 'Server is shuting down now...');    
+    server.log('info', 'Server is shuting down now...');
     server.stop({}, function(){
 	process.exit(0);
     });
@@ -62,7 +62,7 @@ server.register(require('vision'), function (err) {
 	helpersPath: './views/helpers',
 	layout: true
     });
-   
+
 });
 
 server.register({
@@ -88,8 +88,9 @@ server.register({
 	io.on('connection', function(socket){
 	    users.io(socket);
 	    items.io(socket);
-	    bids.io(socket);	});
-	
+	    bids.io(socket);
+	});
+
 	if (err) {
 	    throw err;
 	}

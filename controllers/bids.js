@@ -38,10 +38,7 @@ function index(request, reply){
 			rows[i].TimeRemaining = getDiff(rows[i].EndDate);
 		    }
 		}
-		setTimeout(function() {
-		    //send signal just to test
-		    io.emit('bid updated', 'woohoo!');
-		}, 5000);
+
 		reply.view('bids/index', {data : rows});
 	    });	    
     });
@@ -60,5 +57,7 @@ module.exports.route = function(server){
     return this;
 };
 
-module.exports.io = function(socket){ io = socket; };
+module.exports.io = function(socket){
+    io = socket;
+};
 

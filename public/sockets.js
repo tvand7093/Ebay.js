@@ -10,5 +10,3 @@ socket.on('higher bid placed', function(bidInfo){
     console.log("Bid updated");
     console.log(bidInfo);
 });
-
-socket.on('

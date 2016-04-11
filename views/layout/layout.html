@@ -4,7 +4,22 @@
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="/public/sockets.js"></script>
-    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" >
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" >
+    <!-- The jQuery library is a prerequisite for all jqSuite products -->
+    <script type="text/ecmascript" src="/public/js/jquery.min.js"></script>
+    <!-- We support more than 40 localizations -->
+    <script type="text/ecmascript" src="/public/js/i18n/grid.locale-en.js"></script>
+    <!-- This is the Javascript file of jqGrid -->
+    <script type="text/ecmascript" src="/public/js/jquery.jqGrid.min.js"></script>
+
+    <!-- The link to the CSS that the grid needs -->
+    <link rel="stylesheet" type="text/css" media="screen" href="/public/css/ui.jqgrid-bootstrap.css" />
+    <script>
+      $.jgrid.defaults.width = 780;
+      $.jgrid.defaults.height = 300;
+      $.jgrid.defaults.responsive = true;
+      $.jgrid.defaults.styleUI = 'Bootstrap';
+      </script>
   </head>
   <body>
     <div class='container-fluid'>
@@ -23,7 +38,7 @@
 	      All Items
 	    </a>
 	    <a href="/bids" class="list-group-item">My Bids</a>
-	    <a href="/items" class="list-group-item">My Items</a>
+	    <a href="/items/list" class="list-group-item">My Items</a>
 	    <a href="/users" class="list-group-item">View Users</a>
 	  </div>
 	</div>
