@@ -19,6 +19,9 @@ const bids = require('./controllers/bids.js').route(server);
 //route items
 const items = require('./controllers/items.js').route(server);
 
+//categories
+const categories = require('./controllers/categories.js').route(server);
+
 //global routing
 server.route([
     {
