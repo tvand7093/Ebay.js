@@ -14,5 +14,5 @@ module.exports.open = function(){
 	}).catch(function(err){
 	    fail(err);
 	});
-    });    
-}
+    });
+};

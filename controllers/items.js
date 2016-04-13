@@ -121,17 +121,16 @@ function list(request, reply) {
 
 function create(request, reply) {
 
+  request.payload.SellerEmail = 'tyler@gmail.com';
+  request.payload.EndDate = moment(request.payload.EndDate).format('YYYY-MM-DD HH:mm:ss');
+
+  delete request.payload.id;
+  delete request.payload.oper;
+
   const insertItem = sql
                      .insert()
                      .into('Items')
-                     .setFields({
-                       Name: request.payload.name,
-                       Category: request.payload.category,
-                       MaxBidPrice: request.payload.max_price,
-                       SellerEmail: request.payload.seller_email,
-                       StartPrice: request.payload.start_price,
-                       EndDate: moment(request.payload.end_date).format('YYYY-MM-DD HH:mm:ss')
-                     });
+                     .setFields(request.payload);
 
   const insertResult = sql
                        .insert()
@@ -179,12 +178,18 @@ function create(request, reply) {
 
 function update(request, reply){
 
+  let data = request.payload;
+  data.Id = data.id;
+  data.EndDate = moment(data.EndDate).format('YYYY-MM-DD HH:mm:ss');
+  delete data.id;
+  delete data.oper;
+
+
   let updateSql = sql.update()
                   .table('Items')
-                  .where('Id = ?', request.payload.Id)
-                  .setFields(request.payload)
+                  .where('Id = ?', data.Id)
+                  .setFields(data)
                   .toParam();
-
   db.open().then(
     function(ctx) {
       ctx.query('START TRANSACTION').then(function(trans){
@@ -214,27 +219,21 @@ function update(request, reply){
 }
 
 function remove(request, reply){
-
-}
-
-function manage(request, reply){
-  let operation = request.payload.oper;
-
-  delete request.payload.oper;
-  request.payload.EndDate = moment(request.payload.end_date).format('YYYY-MM-DD HH:mm:ss');
-
-  if(operation === 'add'){
-    //do edit
-    create(request, reply);
-  }
-  if(operation === 'edit'){
-    //do edit
-    update(request, reply);
-  }
-  if(operation === 'delete'){
-    //do delete
-    remove(request, reply);
-  }
+  db.open().then(function(ctx){
+    ctx.query('START TRANSACTION').then(function(trans){
+      const query = sql.remove().from('Items').where('Id = ?', request.payload.id).toParam();
+      ctx.query(query.text, query.values).then(function(result){
+        //commit change
+        ctx.query('COMMIT').then(function(end){
+          reply(true);
+        });
+      });
+    }).fail(function(err){
+      ctx.query('ROLLBACK').then(function(end){
+        reply({error: err});
+      });
+    });
+  });
 }
 
 //BEGIN CONTROLLER CONFIG
@@ -284,24 +283,47 @@ module.exports.route = function(server) {
       {
         method: 'POST',
         path: '/items',
-        handler: manage,
+        handler: create,
         config: {
           validate: {
-            query: {
-              _search: Joi.boolean(),
-              nd: Joi.number(),
-              sidx: Joi.string().allow(''),
-              sord: Joi.string().allow(''),
-              page: Joi.number(),
-              rows: Joi.number()
-            },
             payload: {
-              ItemId: Joi.number().required(),
+              id: Joi.any(),
               Name: Joi.string(),
               Category: Joi.string(),
               MaxBidPrice: Joi.number().min(0.01),
               StartPrice: Joi.number().min(0.01),
               EndDate: Joi.date(),
+              oper: Joi.string()
+            }
+          }
+        }
+      },
+      {
+        method: 'PUT',
+        path: '/items',
+        handler: update,
+        config: {
+          validate: {
+            payload: {
+              id: Joi.number(),
+              Name: Joi.string(),
+              Category: Joi.string(),
+              MaxBidPrice: Joi.number().min(0.01),
+              StartPrice: Joi.number().min(0.01),
+              EndDate: Joi.date(),
+              oper: Joi.string()
+            }
+          }
+        }
+      },
+      {
+        method: 'DELETE',
+        path: '/items',
+        handler: remove,
+        config: {
+          validate: {
+            payload: {
+              id: Joi.number(),
               oper: Joi.string()
             }
           }

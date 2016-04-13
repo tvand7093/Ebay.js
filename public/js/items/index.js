@@ -45,9 +45,6 @@ $(function() {
                            }
                          });
 
-
-
-
   $('#search').click(refreshGrid);
 
   refreshGrid();

@@ -2,6 +2,7 @@
 'use strict';
 
 $(function() {
+
   $("#jqGrid").jqGrid({
     mtype: "GET",
     url: '/items/grid',
@@ -90,94 +91,29 @@ $(function() {
     height: 250,
     width: 1100,
     rowNum: 20,
-    onSelectRow: editRow,
     pager: "#jqGridPager"
   });
 
-  var lastSelection;
-
-  function editRow(id) {
-    if (id && id !== lastSelection) {
-      var grid = $("#jqGrid");
-      grid.restoreRow(lastSelection);
-
-
-      let maxId = id;
-      if(typeof maxId !== 'number'){
-        maxId = 0;
-        $('#jqGrid tr').each(function(index, item){
-          if(index > 1){
-            if(Number(item.id) > maxId){
-              maxId = Number(item.id);
-            }
-          }
-        });
-      }
-
-      if(typeof maxId === 'number') ++maxId;
-
-      var editParameters = {
-        keys: true,
-        initdata: { Id: maxId },
-        successfunc: editSuccessful,
-        errorfunc: editFailed,
-        restoreAfterError: false,
-        useDefValues : true
-      };
-
-      grid.jqGrid('editRow', id, editParameters);
-      lastSelection = maxId;
-    }
-  }
-
-  function editSuccessful( data, stat) {
-    var response = data.responseJSON;
-    if (response.hasOwnProperty("error")) {
-      if(response.error.length) {
-        return [false,response.error ];
-      }
-    }
-    return [true,"",""];
-  }
-
-  function editFailed(rowID, response) {
-    let message = "An error has occurred";
-    if(response.responseJSON.validation){
-      let splitUp = response.responseJSON.message.split("[");
-      message = splitUp[1].substr(0, splitUp[1].length - 1);
-    }
-
-    $.jgrid.info_dialog(
-      $.jgrid.regional["en"].errors.errcap,
-      '<div class="ui-state-error">' +  message + '</div>',
-      $.jgrid.regional["en"].edit.bClose,
-      {buttonalign:'right', styleUI : 'Bootstrap'}
-    );
-  }
-
   $('#jqGrid').navGrid("#jqGridPager",
                        {
-                         edit: false,
-                         add: false,
-                         del: false,
-                         refresh: false,
+                         edit: true,
+                         add: true,
+                         del: true,
                          view: false
+                       },
+                       { //update options
+                         closeAfterEdit: true,
+                         url: '/items',
+                         mtype: 'PUT'
+                       },
+                       { //add options
+                         closeAfterEdit: true,
+                         url: '/items',
+                         mtype: 'POST'
+                       },
+                       { //delete options
+                         closeAfterEdit: true,
+                         url: '/items',
+                         mtype: 'DELETE'
                        });
-
-
-  $('#jqGrid').inlineNav('#jqGridPager',
-                         // the buttons to appear on the toolbar of the grid
-                         {
-                           edit: true,
-                           add: true,
-                           del: true,
-                           cancel: true,
-                           editParams: {
-                             keys: true,
-                           },
-                           addParams: {
-                             keys: true
-                           }
-                         });
-
 });
