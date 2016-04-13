@@ -88,7 +88,7 @@ $(function() {
       { label: 'Was Sold', name: 'WasSold', width: 100 }
     ],
     viewrecords: true,
-    height: 250,
+    height: 400,
     width: 1100,
     rowNum: 20,
     pager: "#jqGridPager"
@@ -107,7 +107,7 @@ $(function() {
                          mtype: 'PUT'
                        },
                        { //add options
-                         closeAfterEdit: true,
+                         closeAfterAdd: true,
                          url: '/items',
                          mtype: 'POST'
                        },
