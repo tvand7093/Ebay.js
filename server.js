@@ -89,7 +89,6 @@ server.register({
 	const io = require('socket.io')(server.listener);
 
 	io.on('connection', function(socket){
-	    users.io(socket);
 	    items.io(socket);
 	    bids.io(socket);
 	});

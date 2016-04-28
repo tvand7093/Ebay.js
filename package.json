@@ -4,7 +4,6 @@
   "description": "A Node.js implementation of an eBay style website for CS351 (intro to databases).",
   "main": "server.js",
   "scripts": {
-      "install": "mkdir views/helpers",
       "test": "jasmine"
   },
   "repository": {

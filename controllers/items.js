@@ -59,6 +59,25 @@ function index(request, reply) {
   });
 }
 
+function auction(request, reply) {
+	let itemId = request.itemid;
+	const itemQuery = sql.select().from('Items', 'i').where('i.Id = ?',  itemId);
+	
+	db.open().then(function(ctx) {
+		ctx.query(itemQuery).then(function(rows) {
+			ctx.end();
+			
+			if (rows.length > 1) {
+				rows = rows[0];
+			}
+			
+			reply(rows);
+		});
+	});
+	
+}
+
+
 function search(request, reply) {
   let query = request.query;
   let name = query.name || '';
