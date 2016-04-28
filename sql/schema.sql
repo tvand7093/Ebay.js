@@ -1,7 +1,6 @@
 
 -- Define all of our initial database schema in this file.
 -- This would be ran for every type of environment we intend on running the system.
-
 CREATE TABLE Users
 (
 	FirstName NVARCHAR(30),
@@ -65,3 +64,22 @@ CREATE TABLE Bids
 	REFERENCES Items(Id)
 	ON DELETE CASCADE
 );
+
+DELIMITER $$
+
+CREATE TRIGGER AddNewBid
+BEFORE INSERT ON Bids
+FOR EACH ROW BEGIN
+	 IF (NEW.Amount <= (SELECT MAX(Amount) FROM Bids WHERE ItemId = NEW.ItemId)) THEN
+	    SET NEW.UserEmail = NULL; -- force a null fk so as to stop insert.
+	 END IF;
+
+	 IF ((SELECT COUNT(i.Id) FROM AuctionResults a
+	 JOIN Items i on i.AuctionResultId = a.Id
+	 WHERE a.IsClosed = 1 AND i.Id = NEW.ItemId
+	 LIMIT 1) = 1) THEN
+	       SET NEW.UserEmail = NULL;
+	 END IF;
+END;
+
+$$

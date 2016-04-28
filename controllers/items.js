@@ -62,19 +62,19 @@ function index(request, reply) {
 function auction(request, reply) {
 	let itemId = request.itemid;
 	const itemQuery = sql.select().from('Items', 'i').where('i.Id = ?',  itemId);
-	
+
 	db.open().then(function(ctx) {
 		ctx.query(itemQuery).then(function(rows) {
 			ctx.end();
-			
+
 			if (rows.length > 1) {
 				rows = rows[0];
 			}
-			
+
 			reply(rows);
 		});
 	});
-	
+
 }
 
 
@@ -117,18 +117,83 @@ function grid(request, reply){
              .field('i.StartPrice')
              .field('ar.IsClosed')
              .field('ar.WasSold')
+             .field('ar.Id', 'AuctionResultId')
              .from('Items', 'i')
              .join('AuctionResults', 'ar', 'ar.Id = i.AuctionResultId')
+             .where('ar.IsClosed = 0')
              .toString();
 
   db.open().then(function(ctx) {
     ctx.query(list).then(function(rows) {
-      ctx.end();
-      rows.forEach(function(item){
-        item.EndDate = moment(item.EndDate).format('LLL');
+      let toAutoClose = [];
+
+      var results = rows.map(function(item){
+        if(item.EndDate < new Date()){
+          //means this needs to autoclose and be removed from the set.
+          toAutoClose.push(item);
+          return null;
+        }
+        else{
+          item.EndDate = moment(item.EndDate).format('LLL');
+          return item;
+        }
       });
 
-      reply(rows);
+      if(toAutoClose.length > 0){
+        //we need to close some.
+        //the function to run for updating a single record.
+        const updateFunc = function(val){
+                           //get last bidder if any.
+                           const lastBidder = sql.select()
+                                              .field("UserEmail")
+                                              .from('Bids')
+                                              .where("ItemId = ?", val.ItemId)
+                                              .order("TimeStamp", false) //desc order
+                                              .toString();
+
+                           const update = sql.update()
+                                      .table('AuctionResults')
+                                      .where('id = ?', val.AuctionResultId)
+                                      .set('IsClosed', 1);
+
+                           return ctx.query(lastBidder).then(function(bidders){
+                             let updateSql = update;
+                             if(bidders.length > 0){
+                               //someone bid on it, so use them
+                               updateSql = update
+                                           .set('WinnerEmail', bidders[0].UserEmail)
+                                           .toString();
+                             }
+                             else{
+                               updateSql = update.toString();
+                             }
+                             return ctx.query(updateSql);
+                           });
+                         };
+
+        var basePromise = null;
+
+        //daisy chain the promises together
+        toAutoClose.forEach(function(val, index, arr){
+          if(basePromise){
+            basePromise = basePromise.then(updateFunc(val));
+          }
+          else{
+            basePromise = updateFunc(val);
+          }
+        });
+
+        //append the final one and return the response to the view.
+        basePromise.then(function(done){
+          ctx.end();
+          //remove nulls.
+          reply(results.filter(function(val) { val !== null }));
+        });
+      }
+      else {
+         ctx.end();
+        reply(results);
+      }
     });
   });
 }
