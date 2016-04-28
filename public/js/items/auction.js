@@ -4,7 +4,7 @@
 $(function() {
 	$("#jqGrid").jqGrid({
     mtype: "GET",
-    url: '/items/bidsgrid',
+    url: '/items/itmeBidsGrid',
     styleUI : 'Bootstrap',
     datatype: "json",
     postData: {
@@ -21,7 +21,7 @@ $(function() {
     pager: "#jqGridPager",
     loadonce: true
   });
-  
+
     $('#jqGrid').navGrid("#jqGridPager",
    {
 		edit: false,

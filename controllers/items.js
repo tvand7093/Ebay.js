@@ -62,21 +62,29 @@ function index(request, reply) {
 function auction(request, reply) {
 	let itemId = request.itemid;
 	const itemQuery = sql.select().from('Items', 'i').where('i.Id = ?',  itemId);
-	
+
 	db.open().then(function(ctx) {
-		ctx.query(itemQuery).then(function(rows) {
+		ctx.query(itemQuery).then(function(item) {
 			ctx.end();
-			
-			if (rows.length > 1) {
-				rows = rows[0];
+			if (item.length > 1) {
+				item = item[0];
 			}
-			
-			reply(rows);
+			reply(item);
 		});
 	});
-	
+
 }
 
+function itemBidsGrid(itemId) {
+  let list = ql.select().from('Bids', 'b').where('b.ItemId = ?', itemId);
+
+  db.open().then(function(ctx) {
+    ctx.query(list.toString()).then(function(rows) {
+      ctx.end();
+      reply(rows);
+    });
+  });
+}
 
 function search(request, reply) {
   let query = request.query;
@@ -295,6 +303,18 @@ module.exports.route = function(server) {
               sord: Joi.string().allow(''),
               page: Joi.number(),
               rows: Joi.number()
+            }
+          }
+        }
+      },
+      {
+        method: 'GET',
+        path: '/items/auction/{itemId}',
+        handler: auction,
+        config: {
+          validate: {
+            params: {
+              itemId: Joi.any()
             }
           }
         }
