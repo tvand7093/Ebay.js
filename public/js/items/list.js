@@ -84,6 +84,24 @@ $(function() {
           }
         }
       },
+      {
+        label: 'Seller Email',
+        name: 'SellerEmail',
+        width: 250,
+        editable: true,
+        editRules: {
+          SellerEmail: true,
+          required: true
+        },
+        edittype:"select",
+        editoptions: {
+          dataInit: function (element) {
+            $(element).selector({
+              source: "/users/emails"
+            });
+          }
+        }
+      }
       { label: 'Is Over', name: 'IsClosed', width: 100 },
       { label: 'Was Sold', name: 'WasSold', width: 100 }
     ],

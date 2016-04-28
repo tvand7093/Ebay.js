@@ -16,7 +16,7 @@ function index(request, reply){
 		ctx.end();
 		debugger
 		reply.view('users/index', {data : rows});
-	    });	    
+	    });
 	});
 };
 
@@ -27,24 +27,28 @@ function grid(request, reply){
              .field('u.FirstName')
              .field('u.LastName')
              .from('Users', 'u');
-			
+
 	let first = request.query.firstname;
 	let last = request.query.lastname;
-			
+
 	if (first) {
 		list = list.where('u.FirstName LIKE ?', `%${first}%`)
 	}
-	
+
 	if (last) {
 		list = list.where('u.LastName LIKE ?', `%${last}%`)
-	}		 
-			 
+	}
+
   db.open().then(function(ctx) {
     ctx.query(list.toString()).then(function(rows) {
       ctx.end();
       reply(rows);
     });
   });
+}
+
+function emails() {
+	return sql.select().field('u.Email').from('Users', 'u');
 }
 
 
