@@ -70,16 +70,27 @@ DELIMITER $$
 CREATE TRIGGER AddNewBid
 BEFORE INSERT ON Bids
 FOR EACH ROW BEGIN
-	 IF (NEW.Amount <= (SELECT MAX(Amount) FROM Bids WHERE ItemId = NEW.ItemId)) THEN
+-- handle if the amount specified is less then the current max bid.
+    	 IF (NEW.Amount <= (SELECT MAX(Amount) FROM Bids WHERE ItemId = NEW.ItemId)) THEN
 	    SET NEW.UserEmail = NULL; -- force a null fk so as to stop insert.
 	 END IF;
-
+	
+-- handle if the auction result has been close.
 	 IF ((SELECT COUNT(i.Id) FROM AuctionResults a
 	 JOIN Items i on i.AuctionResultId = a.Id
 	 WHERE a.IsClosed = 1 AND i.Id = NEW.ItemId
 	 LIMIT 1) = 1) THEN
 	       SET NEW.UserEmail = NULL;
 	 END IF;
+
+-- handle updating the auction result to bought /sold if the price is at the max
+	 IF (NEW.Amount = (SELECT MaxBidPrice FROM Items WHERE Id = NEW.ItemId LIMIT 1)) THEN
+	    UPDATE AuctionResults a
+	    	   JOIN Items i ON i.AuctionResultId = a.Id
+   	    	   SET a.IsClosed = 1, a.WinnerEmail = NEW.UserEmail, a.WasSold = 1	
+	    	   WHERE i.Id = NEW.ItemId;
+	 END IF;
+
 END;
 
 $$

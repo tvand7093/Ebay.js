@@ -24,18 +24,19 @@ function index(request, reply){
 
 function grid(request, reply){
   const statement = sql.select()
-	            .field('i.Id')
-    	            .field('i.Name')
-    	            .field('i.Category')
-    	            .field('b.Amount')
-    	            .field('b.TimeStamp')
-    	            .field('i.EndDate')
-	            .from('Items', 'i')
-	            .join('Bids', 'b', 'b.ItemId = i.Id')
-	            .toString();
+                    .from('Items', 'i')
+                    .field('i.Id', 'ItemId')
+                    .field('i.Name')
+                    .field('i.Category')
+                    .field('i.EndDate')
+                    .field('i.MaxBidPrice')
+                    .field('i.StartPrice')
+                    .join('AuctionResults', 'ar', 'ar.Id = i.AuctionResultId')
+                    .where('ar.IsClosed = 0')
+                    .where('i.EndDate > NOW()');
 
   db.open().then(function(ctx){
-    ctx.query(statement)
+    ctx.query(statement.toString())
     .then(function(rows){
       ctx.end();
       if(rows.length > 0){

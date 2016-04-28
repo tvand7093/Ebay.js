@@ -5,7 +5,7 @@ $(function() {
 
   $("#jqGrid").jqGrid({
     mtype: "GET",
-    url: '/bids/grid',
+    url: '/items/search',
     styleUI : 'Bootstrap',
     datatype: "json",
     postData: {
@@ -16,15 +16,17 @@ $(function() {
       { label: 'Item #', name: 'ItemId', key: true, width: 100 },
       { label: 'Item Name', name: 'Name', width: 200 },
       { label: 'Category', name: 'Category', width: 200 },
-      { label: 'Current Bid', name: 'Amount', width: 200 },
-      { label: 'Last Bid Time', name: 'TimeStamp', width: 200 },
-      { label: 'Time Remaining', name: 'TimeRemaining', width: 200 }
+      { label: 'Start Price', name: 'StartPrice', width: 200 },
+      { label: 'Max Price', name: 'MaxBidPrice', width: 200 },
     ],
     height: 400,
     width: 1100,
     rowNum: 20,
     pager: "#jqGridPager",
-    loadonce: true
+    loadonce: true,
+    onSelectRow: function(ids){
+      window.location.href = `/items/${ids[0]}`;
+    }
   });
 
   $('#jqGrid').navGrid("#jqGridPager",
@@ -41,6 +43,7 @@ $(function() {
 function refreshGrid() {
   const name = $('#name').val();
   const category = $('#category').val();
+
   const query = {
     postData: {
       name: name,

@@ -1,35 +1,139 @@
-<script src='/public/js/items/auction.js' ></script>
-
 <div class='row'>
-	<div class='col-md-12'>
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				<h3 class="panel-title">Item: {{Id}}</h3>
-			</div>
-			<div class="panel-body"> 
-				<h4>{{Name}}</h4>
-				<div class="row">
-					<div class='col-md-12'>
-					
-					
-					</div>
-				</div>
-			</div>
-		</div>
+  <div class='col-md-12'>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+	<h3 class="panel-title">Item # {{vm.Id}}</h3>
+      </div>
+      <div class="panel-body">
+	<div class='row'>
+	  <div class='col-md-12'>
+	    <div class='col-md-6'>
+	      <h3>{{vm.Name}}</h3>
+	    </div>
+
+	  </div>
 	</div>
+
+	<div class='row'>
+	  <div class='col-md-12'>
+	    <!--TODO: Fill with lots of details!-->
+	    <div class='col-md-3'>
+	      <label class='form-label'>Sold By</label>
+	      <span class='form-control'>{{vm.SellerEmail}}</span>
+	    </div>
+	    <div class='col-md-3'>
+	      <label class='form-label'>Category</label>
+	      <span class='form-control'>{{vm.Category}}</span>
+	    </div>
+	    <div class='col-md-3'>
+	      <label class='form-label'>Start Price</label>
+	      <span class='form-control'>{{vm.StartPrice}}</span>
+	    </div>
+	    <div class='col-md-3'>
+	      <label class='form-label'>Max Price</label>
+	      <span class='form-control'>{{vm.MaxBidPrice}}</span>
+	    </div>
+	  </div>
+	</div>
+	<div class='row'>
+	  <div class='col-md-12'>
+	    &nbsp;
+	  </div>
+	</div>	
+	<div class='row'>
+	  <div class='col-md-12'>
+	    <div class='col-md-6'>
+	      <label class='form-label'>End Date</label>
+	      <span class='form-control'>{{vm.EndDate}}</span>
+	    </div>
+
+	    {{#if vm.IsClosed}}
+
+	    <div class='col-md-6'>
+	      <label class='form-label'>Won by</label>
+	      <span class='form-control'>{{vm.WinnerEmail}}</span>
+	    </div>
+
+	    {{/if}}
+
+	    
+	  </div>
+	</div>
+
+	<!-- NEW ROW -->
+	<!-- Needed for the grid, so must ALWAYS show. -->
+	<input type='hidden' value='{{vm.Id}}' id='Id' name='Id'/>
+
+	{{#unless vm.IsClosed}}
+	<div class='row'>
+	  <div class='col-md-12'>
+	    &nbsp;
+	  </div>
+	</div>
+	
+	<div class='row'>
+	  <input type='hidden' value='{{vm.StartPrice}}' id='minPrice'/>
+	  <input type='hidden' value='{{vm.MaxBidPrice}}' id='maxPrice'/>
+
+	  <div class='col-md-12'>
+	    <div class='col-md-2'>
+	      <label class='form-label'>Bid Price</label>
+	      <input class='form-control' name='price' id='price'/>
+	    </div>
+	    <div class='col-md-2'>
+	      &nbsp;
+	      <button id='placeBid' class='btn btn-default btn-success form-control disabled'>Place Bid</button>
+	    </div>
+	  </div>
+	</div>
+	<div class='row'>
+	  <div class='col-md-12'>
+	    &nbsp;
+	  </div>
+	</div>
+	
+      </div>
+      {{/unless}}
+	
+    </div>
+  </div>
 </div>
 <div class='row'>
   <div class='col-md-12'>
     <div class="panel panel-default">
       <div class="panel-heading">
-	<h3 class="panel-title">Bids</h3>
+	<h3 class="panel-title">Bid History</h3>
       </div>
       <div class="panel-body">
-	<div>
+	<div class='col-md-12'>
+	  <div>
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager" style='height: 50px'></div>
+	  </div>
+
+	  <!-- <table class='table table-bordered table-fluid'> -->
+	  <!--   <thead> -->
+	  <!--     <tr> -->
+	  <!-- 	<td>Name</td> -->
+	  <!-- 	<td>Bid Placed</td> -->
+	  <!-- 	<td>Placed On</td> -->
+	  <!--     </tr> -->
+	  <!--   </thead> -->
+	  <!--   <tbody> -->
+	  <!--     {{#bids}} -->
+
+	  <!--     <tr> -->
+	  <!-- 	<td>{{ UserEmail }}</td> -->
+	  <!-- 	<td>{{ Amount }}</td> -->
+	  <!-- 	<td>{{ TimeStamp }}</td> -->
+	  <!--     </tr> -->
+	      
+	  <!--     {{/bids}} -->
+	  <!--   </tbody> -->
+	  <!-- </table> -->
 	</div>
       </div>
     </div>
   </div>
 </div>
+<script src="/public/js/items/auction.js"></script>

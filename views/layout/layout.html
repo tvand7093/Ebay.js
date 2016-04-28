@@ -4,6 +4,9 @@
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="/public/js/sockets.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+    <script type='text/javascript' src='//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js'></script>
+
     <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" >
     <!-- The jQuery library is a prerequisite for all jqSuite products -->
     <script type="text/ecmascript" src="/public/js/jquery.min.js"></script>
@@ -18,12 +21,16 @@
     
     <!-- The link to the CSS that the grid needs -->
     <link rel="stylesheet" type="text/css" media="screen" href="/public/css/ui.jqgrid-bootstrap.css" />
+    
     <script>
       $.jgrid.defaults.width = 780;
       $.jgrid.defaults.height = 300;
       $.jgrid.defaults.responsive = true;
       $.jgrid.defaults.styleUI = 'Bootstrap';
-      </script>
+    </script>
+
+    
+
   </head>
   <body>
     <div class='container-fluid'>
@@ -38,12 +45,11 @@
       <div class='row'>
 	<div class='col-md-2'>
 	  <div class="list-group">
-	    <a href="/" class="list-group-item">
+	    <a href="/" class="list-group-item all">
 	      All Items
 	    </a>
-	    <a href="/bids" class="list-group-item">My Bids</a>
-	    <a href="/items/list" class="list-group-item">My Items</a>
-	    <a href="/users" class="list-group-item">View Users</a>
+	    <a href="/items/list" class="list-group-item edit-items">Edit Items</a>
+	    <a href="/users" class="list-group-item users">View Users</a>
 	  </div>
 	</div>
 	<div class='col-md-10'>
@@ -53,8 +59,17 @@
     </div>
 
     <script>
-      $(function() {
-	  $(`a.list-group-item[href='${window.location.pathname}']`).addClass('active');
+    $(function() {
+	const loc = window.location.pathname;
+	if(loc.indexOf('list') != -1){
+	    $("a.edit-items").addClass('active');
+	}
+	else if (loc.indexOf('users') != -1){
+	    $("a.users").addClass('active');
+	}
+	else {
+	    $("a.all").addClass('active');
+	}
       });
     </script>
   </Body>
