@@ -47,7 +47,14 @@ function grid(request, reply){
   });
 }
 
-function emails() {
+function emails(request, reply) {
+	db.open().then(function(ctx) {
+		ctx.query('SELECT email FROM Users')
+							.then(function(rows) {
+								ctx.end();
+								reply(rows);
+							});
+	});
 	return sql.select().field('u.Email').from('Users', 'u');
 }
 

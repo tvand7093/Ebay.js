@@ -92,7 +92,7 @@ $(function() {
         editRules: {
           SellerEmail: true,
           required: true
-        },
+          },
         edittype:"select",
         editoptions: {
           dataInit: function (element) {
@@ -101,7 +101,7 @@ $(function() {
             });
           }
         }
-      }
+      },
       { label: 'Is Over', name: 'IsClosed', width: 100 },
       { label: 'Was Sold', name: 'WasSold', width: 100 }
     ],
