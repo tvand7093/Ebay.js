@@ -223,7 +223,7 @@ function grid(request, reply){
              .field('ar.Id', 'AuctionResultId')
              .from('Items', 'i')
              .join('AuctionResults', 'ar', 'ar.Id = i.AuctionResultId')
-             .where('ar.IsClosed = 0')
+//             .where('ar.IsClosed = 0')
              .toString();
 
   db.open().then(function(ctx) {
